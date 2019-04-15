@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Template • TodoMVC</title>
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/index.css" />
+</head>
+
+<body>
+  <section class="todoapp" id="app">
+    <header class="header">
+      <h1>todos</h1>
+      <input class="new-todo" v-model="newname" placeholder="What needs to be done?" autofocus @keyup.enter="addli" />
+    </header>
+    <!-- This section should be hidden by default and shown when there are todos -->
+    <section class="main">
+      <input id="toggle-all" class="toggle-all" type="checkbox" v-model="ischecked"  @click="allchecked"/>
+      <label for="toggle-all" >Mark all as complete</label>
+      <ul class="todo-list">
+        <li v-for="item in list" :key="item.id" :class="{completed:item.done,editing:item.id == editid}">
+          <div class="view">
+          <input class="toggle" type="checkbox" :checked="item.done" @click="active(item.id)"/>
+          <label class="label"   @dblclick="showedit(item.id)">{{item.name}}</label>
+          <button class="destroy" @click="delitem(item.id)"></button>
+        </div>
+        <input class="edit"   v-model="item.name"  @keyup.enter="edittext(item.id)" />
+        </li>
+      </ul>
+    </section>
+    <!-- This footer should hidden by default and shown when there are todos -->
+    <footer class="footer" v-show="list.length > 0 ">
+      <!-- This should be `0 items left` by default -->
+      <span class="todo-count"><strong>{{ num }}</strong> item left</span>
+      <!-- Remove this if you don't implement routing -->
+      <ul class="filters">
+        <li><a class="selected" href="#/">All</a></li>
+        <li><a href="#/active">Active</a></li>
+        <li><a href="#/completed" class="complete">Completed</a></li>
+      </ul>
+      <!-- Hidden if no completed items are left ↓ -->
+      <button class="clear-completed" @click="delallcom">
+        Clear completed
+      </button>
+    </footer>
+  </section>
+  <script src="node_modules/vue/dist/vue.js"></script>
+  <script>
+  const vm = new Vue({
+    el: '#app',
+    data: {
+      ischecked: false,
+      editid: -1,
+      num1:'',
+      newname: '',
+      list: [
+        {
+        id: 1,
+        name: '吃鸡',
+        done: true
+        },
+        {
+        id: 2,
+        name: '敲代码',
+        done: false
+        },
+        {
+        id: 3,
+        name: 'lol',
+        done: false
+        }
+      ]
+    },
+    methods: {
+      delitem (id) {
+        this.list = this.list.filter(item => item.id !== id)
+      },
+      showedit (id) {
+        this.editid = id
+      },
+      active (id) {
+        let toge = this.list.find(item => item.id == id).done
+        this.list.find(item => item.id == id).done = !toge
+        this.ischecked = this.list.every(item => item.done == true)
+
+      },
+      delallcom () {
+        this.list = this.list.filter(item => !item.done)
+      },
+      allchecked () {
+        this.list.forEach(item => item.done = !this.ischecked)
+      },
+      edittext (id) {
+        this.editid = -1
+      },
+      addli () {
+        if (this.newname.trim() =='') {
+          return
+        }
+        let id =this.list.length == 0 ? 1 : this.list[this.list.length - 1].id + 1
+        let obj = {
+          id,
+          name: this.newname,
+          done:false
+        }
+        this.list.push(obj)
+        this.newname = ''
+      }
+    },
+    computed: {
+      num () {
+        return  this.num1 = this.list.filter(item =>!item.done).length
+      }
+    }
+  }) 
+  
+  
+  </script>
+</body>
+
+</html>

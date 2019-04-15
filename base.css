@@ -1,0 +1,17 @@
+.body {
+  margin: 0;
+  padding: 0;
+}
+.class {
+  padding: 0;
+}
+ul {
+  width: 100px;
+}
+ul li {
+  height: 100px;
+}
+ul li a {
+  width: 99px;
+  height: 50px;
+}
